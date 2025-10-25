@@ -5,15 +5,22 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? roleArgument =
+        ModalRoute.of(context)!.settings.arguments as String?;
+
+    final String role = roleArgument ?? 'Tamu';
+
+    final String displayRole = role[0].toUpperCase() + role.substring(1);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: Text('Login - $displayRole'),
         backgroundColor: Colors.teal,
       ),
-      body: const Center(
+      body: Center(
         child: Text(
-          'Ini adalah Halaman Login',
-          style: TextStyle(fontSize: 20),
+          'Ini adalah Halaman Login untuk $displayRole',
+          style: const TextStyle(fontSize: 20),
         ),
       ),
     );

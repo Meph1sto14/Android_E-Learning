@@ -17,15 +17,40 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.teal,
         elevation: 0,
         actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/login');
-            },
-            child: const Text(
+PopupMenuButton<String>(
+          onSelected: (String role) {
+            // 1. Fungsi ini akan berjalan saat item menu dipilih
+            // 2. Kita navigasi ke /login dan mengirim 'role' (mis: 'siswa') sebagai arguments
+            Navigator.pushNamed(context, '/login', arguments: role);
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            // Ini adalah daftar item menu Anda
+            const PopupMenuItem<String>(
+              value: 'siswa', // nilai yang akan dikirim ke onSelected
+              child: Text('Siswa'),
+            ),
+            const PopupMenuItem<String>(
+              value: 'guru', // nilai yang akan dikirim ke onSelected
+              child: Text('Guru'),
+            ),
+            const PopupMenuItem<String>(
+              value: 'admin', // nilai yang akan dikirim ke onSelected
+              child: Text('Admin'),
+            ),
+          ],
+          // 'child' ini adalah widget yang akan terlihat sebagai tombol "Login"
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
               'Login',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16, // Samakan dengan font size di AppBar
+                fontWeight: FontWeight.w500, // Agar terlihat seperti tombol
+              ),
             ),
           ),
+        ),
           const SizedBox(width: 8),
           ElevatedButton(
             onPressed: () {
