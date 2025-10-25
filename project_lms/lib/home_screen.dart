@@ -17,40 +17,32 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.teal,
         elevation: 0,
         actions: [
-PopupMenuButton<String>(
-          onSelected: (String role) {
-            // 1. Fungsi ini akan berjalan saat item menu dipilih
-            // 2. Kita navigasi ke /login dan mengirim 'role' (mis: 'siswa') sebagai arguments
-            Navigator.pushNamed(context, '/login', arguments: role);
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-            // Ini adalah daftar item menu Anda
-            const PopupMenuItem<String>(
-              value: 'siswa', // nilai yang akan dikirim ke onSelected
-              child: Text('Siswa'),
-            ),
-            const PopupMenuItem<String>(
-              value: 'guru', // nilai yang akan dikirim ke onSelected
-              child: Text('Guru'),
-            ),
-            const PopupMenuItem<String>(
-              value: 'admin', // nilai yang akan dikirim ke onSelected
-              child: Text('Admin'),
-            ),
-          ],
-          // 'child' ini adalah widget yang akan terlihat sebagai tombol "Login"
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Text(
-              'Login',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16, // Samakan dengan font size di AppBar
-                fontWeight: FontWeight.w500, // Agar terlihat seperti tombol
+          PopupMenuButton<String>(
+            onSelected: (String role) {
+              Navigator.pushNamed(context, '/login', arguments: role);
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'siswa',
+                child: Text('Siswa'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'guru',
+                child: Text('Guru'),
+              ),
+            ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              child: Text(
+                'Login',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
-        ),
           const SizedBox(width: 8),
           ElevatedButton(
             onPressed: () {
@@ -82,6 +74,7 @@ PopupMenuButton<String>(
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                     height: 1.3,
+                    fontFamily: 'Poppins',
                   ),
                   children: [
                     TextSpan(
@@ -108,7 +101,7 @@ PopupMenuButton<String>(
                 child: Icon(
                   Icons.school,
                   size: 250,
-                  color: Colors.teal.withOpacity(0.8),
+                  color: Color.fromARGB(204, 0, 150, 136),
                 ),
               )
             ],
