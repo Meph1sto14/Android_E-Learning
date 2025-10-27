@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'materi_detail_screen.dart'; // 
 
 class MateriItem {
   final String title;
@@ -21,15 +22,20 @@ class MateriCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Implementasi minimal dari MateriCard
     double progressValue = double.tryParse(item.progress.replaceAll('%', ''))! / 100;
-    
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 4,
       child: InkWell(
+        // ✅ Aksi ketika kartu diklik
         onTap: () {
-          // Aksi ketika kartu diklik
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MateriDetailScreen(title: item.title),
+            ),
+          );
         },
         borderRadius: BorderRadius.circular(15),
         child: Padding(
@@ -66,7 +72,6 @@ class MateriCard extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              // Tambahkan progress bar sederhana
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
                 child: LinearProgressIndicator(
