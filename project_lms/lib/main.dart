@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:project_lms/home_screen.dart';
 import 'package:project_lms/login_screen.dart';
 import 'package:project_lms/register_screen.dart';
-import 'package:project_lms/dashboard_siswa_screen.dart'; 
-import 'package:project_lms/tugas_screen.dart'; // 
-import 'package:project_lms/kirim_tugas_screen.dart'; // 
+import 'package:project_lms/dashboard_siswa_screen.dart';
+import 'package:project_lms/tugas_screen.dart';
+import 'package:project_lms/kirim_tugas_screen.dart';
+import 'package:project_lms/dashboard_guru_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,14 +30,14 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
         '/dashboard_siswa': (context) => const DashboardScreen(),
-
-        // ✅ Route baru
         '/tugas': (context) => const TugasScreen(),
         '/kirim_tugas': (context) => const KirimTugasScreen(
               mapel: 'Matematika',
               judul: 'Contoh Pengumpulan Tugas',
             ),
+        '/dashboard_guru': (context) => const DashboardGuruScreen(),
       },
     );
   }
 }
+
