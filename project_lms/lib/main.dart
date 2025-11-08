@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:project_lms/home_screen.dart';
-import 'package:project_lms/login_screen.dart';
-import 'package:project_lms/register_screen.dart';
-import 'package:project_lms/dashboard_siswa_screen.dart';
-import 'package:project_lms/tugas_screen.dart';
-import 'package:project_lms/kirim_tugas_screen.dart';
-import 'package:project_lms/dashboard_guru_screen.dart';
+import 'package:project_lms/features/home/home_screen.dart';
+import 'package:project_lms/features/auth/login_screen.dart';
+import 'package:project_lms/features/auth/register_screen.dart';
+import 'package:project_lms/features/dashboard/dashboard_siswa_screen.dart';
+import 'package:project_lms/features/tugas/tugas_screen.dart';
+import 'package:project_lms/features/tugas/kirim_tugas_screen.dart';
+import 'package:project_lms/features/dashboard/dashboard_guru_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,4 +40,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
