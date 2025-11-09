@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_lms/features/tugas/kirim_tugas_screen.dart';
 
-class TugasScreen extends StatelessWidget {
-  const TugasScreen({super.key});
+class TugasListScreen extends StatelessWidget {
+  const TugasListScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +27,7 @@ class TugasScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Daftar Tugas Anda',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -48,7 +44,9 @@ class TugasScreen extends StatelessWidget {
 
   // ===================== Bagian Per Tanggal =====================
   Widget _buildTanggalSection(
-      BuildContext context, MapEntry<String, List<Map<String, String>>> entry) {
+    BuildContext context,
+    MapEntry<String, List<Map<String, String>>> entry,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -85,8 +83,11 @@ class TugasScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.insert_drive_file_outlined,
-              color: Colors.teal, size: 30),
+          const Icon(
+            Icons.insert_drive_file_outlined,
+            color: Colors.teal,
+            size: 30,
+          ),
           const SizedBox(width: 16),
           Expanded(child: _buildTugasInfo(tugas)),
           _buildKirimButton(context, tugas),
@@ -102,18 +103,12 @@ class TugasScreen extends StatelessWidget {
       children: [
         Text(
           tugas["judul"] ?? '',
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
         Text(
           '${tugas["mapel"]} - Pengumpulan Jatuh Tempo',
-          style: const TextStyle(
-            fontSize: 13,
-            color: Colors.black54,
-          ),
+          style: const TextStyle(fontSize: 13, color: Colors.black54),
         ),
       ],
     );
@@ -122,22 +117,19 @@ class TugasScreen extends StatelessWidget {
   // ===================== Tombol Kirim Tugas =====================
   Widget _buildKirimButton(BuildContext context, Map<String, String> tugas) {
     return TextButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => KirimTugasScreen(
-              mapel: tugas["mapel"] ?? '',
-              judul: tugas["judul"] ?? '',
-            ),
-          ),
-        );
-      },
+onPressed: () {
+      Navigator.pushNamed( // <--- BARU
+        context,
+        '/kirim_tugas',
+        arguments: { // Kirim data sebagai 'arguments'
+          'mapel': tugas["mapel"] ?? '',
+          'judul': tugas["judul"] ?? '',
+        },
+      );
+    },
       style: TextButton.styleFrom(
         side: BorderSide(color: Colors.teal.shade700),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: Text(
         'Kirimkan Tugas',

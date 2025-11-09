@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'materi_detail_screen.dart';
 
 class MateriItem {
   final String title;
@@ -35,14 +34,13 @@ class MateriCard extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MateriDetailScreen(title: item.title),
-            ),
-          );
-        },
+onTap: () {
+  Navigator.pushNamed( // <--- BARU
+    context,
+    '/materi_detail',
+    arguments: item.title, // Kirim data sebagai 'arguments'
+  );
+},
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(

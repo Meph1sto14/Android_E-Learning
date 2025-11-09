@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project_lms/features/materi/materi_card.dart';
-import 'package:project_lms/features/tugas/tugas_screen.dart';
-import 'package:project_lms/features/nilai/nilai_screen.dart';
+import 'package:project_lms/features/shared/widgets/materi_card.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+class DashboardSiswaScreen extends StatelessWidget {
+  const DashboardSiswaScreen({super.key});
 
   final List<MateriItem> mataPelajaran = const [
     MateriItem(
@@ -126,7 +124,7 @@ class DashboardScreen extends StatelessWidget {
             color: Colors.black.withOpacity(0.08),
             blurRadius: 8,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -176,10 +174,7 @@ class DashboardScreen extends StatelessWidget {
             icon: Icons.assignment_outlined,
             color: Colors.teal.shade600,
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const TugasScreen()),
-              );
+              Navigator.pushNamed(context, '/tugas'); // BARU
             },
           ),
         ),
@@ -190,10 +185,7 @@ class DashboardScreen extends StatelessWidget {
             icon: Icons.bar_chart_rounded,
             color: Colors.green.shade600,
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const NilaiScreen()),
-              );
+              Navigator.pushNamed(context, '/nilai'); // BARU
             },
           ),
         ),
@@ -212,7 +204,10 @@ class DashboardScreen extends StatelessWidget {
       icon: Icon(icon, color: Colors.white),
       label: Text(
         label,
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       style: TextButton.styleFrom(
         backgroundColor: color,

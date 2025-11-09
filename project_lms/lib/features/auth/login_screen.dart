@@ -49,8 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     0,
                     0,
                     0,
-                  ), // <-- DIGANTI DI SINI
-                  color: Colors.black.withOpacity(0.2),
+                  ), 
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -78,8 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       255,
                       255,
                       255,
-                    ), // <-- DIGANTI DI SINI
-                    color: Color.fromARGB(230, 255, 255, 255),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -268,9 +266,6 @@ class _LoginScreenState extends State<LoginScreen> {
           'Belum punya akun? ',
           style: TextStyle(
             color: const Color.fromARGB(230, 255, 255, 255),
-          ), // <-- DIGANTI DI SINI
-          style: TextStyle(
-            color: Color.fromARGB(230, 255, 255, 255),
           ),
         ),
         GestureDetector(

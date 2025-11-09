@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'materi_data.dart';
+import '../shared/data/materi_data.dart';
 
 class MateriDetailScreen extends StatefulWidget {
   final String title; // Nama mata pelajaran
