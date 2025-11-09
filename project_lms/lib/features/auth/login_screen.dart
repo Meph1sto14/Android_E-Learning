@@ -44,6 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
+                  color: const Color.fromARGB(
+                    51,
+                    0,
+                    0,
+                    0,
+                  ), // <-- DIGANTI DI SINI
                   color: Colors.black.withOpacity(0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
@@ -67,6 +73,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 14,
+                    color: const Color.fromARGB(
+                      230,
+                      255,
+                      255,
+                      255,
+                    ), // <-- DIGANTI DI SINI
                     color: Color.fromARGB(230, 255, 255, 255),
                   ),
                 ),
@@ -241,10 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         child: const Text(
           'Login',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -257,6 +266,9 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         const Text(
           'Belum punya akun? ',
+          style: TextStyle(
+            color: const Color.fromARGB(230, 255, 255, 255),
+          ), // <-- DIGANTI DI SINI
           style: TextStyle(
             color: Color.fromARGB(230, 255, 255, 255),
           ),
