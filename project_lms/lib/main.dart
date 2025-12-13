@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
-      
+
       // --- DAFTAR RUTE APLIKASI ---
       routes: {
         // Rute Bersama
@@ -46,12 +46,12 @@ class MyApp extends StatelessWidget {
         '/dashboard_guru': (context) => const DashboardGuruScreen(),
 
         // Rute Siswa
-        '/dashboard_siswa': (context) => const DashboardSiswaScreen(), // Class asli Anda
+        '/dashboard_siswa': (context) =>
+            const DashboardSiswaScreen(), // Class asli Anda
         '/tugas': (context) => const TugasListScreen(), // Class asli Anda
         '/nilai': (context) => const NilaiScreen(),
 
         // --- PERBAIKAN: Rute dengan Pengecekan Null ---
-        
         '/kirim_tugas': (context) {
           // 1. Ambil argumen sebagai 'dynamic' (bisa null)
           final dynamic argsRaw = ModalRoute.of(context)!.settings.arguments;
@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
               judul: 'Halaman ini tidak bisa diakses langsung',
             );
           }
-          
+
           // 3. Jika aman, baru gunakan datanya
           final args = argsRaw;
           return KirimTugasScreen(
@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
             judul: args['judul'] ?? 'Error',
           );
         },
-        
+
         '/materi_detail': (context) {
           // 1. Ambil argumen sebagai 'dynamic' (bisa null)
           final dynamic titleRaw = ModalRoute.of(context)!.settings.arguments;
@@ -84,12 +84,10 @@ class MyApp extends StatelessWidget {
               title: 'Error: Materi Tidak Ditemukan',
             );
           }
-          
+
           // 3. Jika aman, baru gunakan datanya
           final title = titleRaw;
-          return MateriDetailScreen(
-            title: title,
-          );
+          return MateriDetailScreen(title: title);
         },
       },
     );

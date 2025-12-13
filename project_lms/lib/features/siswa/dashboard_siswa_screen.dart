@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_lms/features/shared/widgets/materi_card.dart';
+import 'package:project_lms/features/shared/widgets/jadwal_card.dart';
 
 class DashboardSiswaScreen extends StatefulWidget {
   const DashboardSiswaScreen({super.key});
@@ -11,28 +12,47 @@ class DashboardSiswaScreen extends StatefulWidget {
 class _DashboardSiswaScreenState extends State<DashboardSiswaScreen> {
   final ScrollController _scrollController = ScrollController();
 
+  // Controller baru untuk list hari agar bisa scroll otomatis saat swipe
+  final ScrollController _dayScrollController = ScrollController();
+
+  String selectedDay = 'Senin';
+
+  final List<String> days = [
+    'Senin',
+    'Selasa',
+    'Rabu',
+    'Kamis',
+    'Jumat',
+    'Sabtu',
+    'Minggu',
+  ];
+
   final List<MateriItem> mataPelajaran = const [
     MateriItem(
       title: 'Matematika',
-      progress: '75%',
+      description:
+          'Mengembangkan kemampuan berhitung, berpikir logis, dan memecahkan masalah sehari-hari.',
       icon: Icons.calculate_outlined,
       color: Colors.blueAccent,
     ),
     MateriItem(
       title: 'Bahasa Indonesia',
-      progress: '40%',
+      description:
+          'Mengasah keterampilan berbahasa melalui membaca, menulis, berbicara, dan mendengarkan dengan baik.',
       icon: Icons.book_outlined,
       color: Colors.green,
     ),
     MateriItem(
       title: 'Ilmu Pengetahuan Alam',
-      progress: '90%',
+      description:
+          'Mempelajari gejala alam, makhluk hidup, energi, dan lingkungan untuk memahami dunia sekitar.',
       icon: Icons.science_outlined,
       color: Colors.deepOrange,
     ),
     MateriItem(
       title: 'Pendidikan Pancasila',
-      progress: '20%',
+      description:
+          'Mengenal hak dan kewajiban sebagai warga negara serta pentingnya hidup rukun dan bertanggung jawab.',
       icon: Icons.gavel_outlined,
       color: Colors.purple,
     ),
@@ -42,30 +62,163 @@ class _DashboardSiswaScreenState extends State<DashboardSiswaScreen> {
   final List<ProgressPelajaranItem> progressPelajaran = const [
     ProgressPelajaranItem(
       title: 'Ilmu Pengetahuan Alam',
-      teacher: 'Lina',
+      siswa: 'Lina',
       lesson: 3,
       totalLesson: 7,
       imageUrl: 'assets/images/science.jpg',
     ),
     ProgressPelajaranItem(
       title: 'Ilmu Pengetahuan Sosial',
-      teacher: 'Lina',
+      siswa: 'Lina',
       lesson: 6,
       totalLesson: 7,
       imageUrl: 'assets/images/social.jpg',
     ),
     ProgressPelajaranItem(
       title: 'Informatika / TIK',
-      teacher: 'Lina',
+      siswa: 'Lina',
       lesson: 1,
       totalLesson: 7,
       imageUrl: 'assets/images/informatika.jpg',
     ),
   ];
 
+  // Data jadwal pelajaran
+  final List<JadwalItem> allJadwal = const [
+    // Senin
+    JadwalItem(
+      mapel: 'Matematika',
+      hari: 'Senin',
+      mulai: '07:00',
+      selesai: '08:30',
+    ),
+    JadwalItem(
+      mapel: 'Bahasa Indonesia',
+      hari: 'Senin',
+      mulai: '08:30',
+      selesai: '10:00',
+    ),
+    JadwalItem(
+      mapel: 'Ilmu Pengetahuan Alam',
+      hari: 'Senin',
+      mulai: '10:15',
+      selesai: '11:45',
+    ),
+
+    // Selasa
+    JadwalItem(
+      mapel: 'Bahasa Inggris',
+      hari: 'Selasa',
+      mulai: '07:00',
+      selesai: '08:30',
+    ),
+    JadwalItem(
+      mapel: 'Ilmu Pengetahuan Sosial',
+      hari: 'Selasa',
+      mulai: '08:30',
+      selesai: '10:00',
+    ),
+    JadwalItem(
+      mapel: 'Matematika',
+      hari: 'Selasa',
+      mulai: '10:15',
+      selesai: '11:45',
+    ),
+
+    // Rabu
+    JadwalItem(
+      mapel: 'Pendidikan Pancasila',
+      hari: 'Rabu',
+      mulai: '07:00',
+      selesai: '08:30',
+    ),
+    JadwalItem(
+      mapel: 'Bahasa Indonesia',
+      hari: 'Rabu',
+      mulai: '08:30',
+      selesai: '10:00',
+    ),
+    JadwalItem(
+      mapel: 'Pendidikan Jasmani',
+      hari: 'Rabu',
+      mulai: '10:15',
+      selesai: '11:45',
+    ),
+
+    // Kamis
+    JadwalItem(
+      mapel: 'Ilmu Pengetahuan Alam',
+      hari: 'Kamis',
+      mulai: '07:00',
+      selesai: '08:30',
+    ),
+    JadwalItem(
+      mapel: 'Matematika',
+      hari: 'Kamis',
+      mulai: '08:30',
+      selesai: '10:00',
+    ),
+    JadwalItem(
+      mapel: 'Seni Budaya',
+      hari: 'Kamis',
+      mulai: '10:15',
+      selesai: '11:45',
+    ),
+
+    // Jumat
+    JadwalItem(
+      mapel: 'Pendidikan Agama Islam',
+      hari: 'Jumat',
+      mulai: '08:00',
+      selesai: '09:30',
+    ),
+    JadwalItem(
+      mapel: 'Bahasa Inggris',
+      hari: 'Jumat',
+      mulai: '09:30',
+      selesai: '11:00',
+    ),
+  ];
+
+  List<JadwalItem> get filteredJadwal {
+    return allJadwal.where((jadwal) => jadwal.hari == selectedDay).toList();
+  }
+
+  // Helper untuk mendapatkan index hari saat ini
+  int get _currentIndex => days.indexOf(selectedDay);
+
+  // Fungsi untuk mengganti hari (digunakan saat swipe atau klik)
+  void _changeDay(int newIndex) {
+    if (newIndex >= 0 && newIndex < days.length) {
+      setState(() {
+        selectedDay = days[newIndex];
+      });
+      // Scroll list tombol hari agar tombol aktif terlihat
+      _scrollToDay(newIndex);
+    }
+  }
+
+  // Fungsi scroll otomatis untuk tombol hari
+  void _scrollToDay(int index) {
+    if (_dayScrollController.hasClients) {
+      // Estimasi lebar item sekitar 85px (padding + text)
+      double offset = index * 85.0;
+      // Batasi agar tidak scroll berlebih (simple clamp)
+      double maxScroll = _dayScrollController.position.maxScrollExtent;
+      if (offset > maxScroll) offset = maxScroll;
+
+      _dayScrollController.animateTo(
+        offset,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
+    _dayScrollController.dispose();
     super.dispose();
   }
 
@@ -80,6 +233,14 @@ class _DashboardSiswaScreenState extends State<DashboardSiswaScreen> {
           SliverToBoxAdapter(child: _buildHeader(context)),
           _buildSectionTitle("Mata Pelajaran Anda"),
           _buildMateriGrid(),
+          const SliverToBoxAdapter(child: SizedBox(height: 40)),
+          _buildSectionTitle("Jadwal Pelajaran"),
+          SliverToBoxAdapter(
+            child: Column(
+              children: [_buildDayFilterWidget(), const SizedBox(height: 16)],
+            ),
+          ),
+          _buildJadwalList(), // List jadwal dengan fitur swipe
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],
       ),
@@ -151,15 +312,20 @@ class _DashboardSiswaScreenState extends State<DashboardSiswaScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 10,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, "/", (route) => false);
+                    context,
+                    "/",
+                    (route) => false,
+                  );
                 },
                 child: Text(
                   "Logout",
@@ -333,11 +499,7 @@ class _DashboardSiswaScreenState extends State<DashboardSiswaScreen> {
                         );
                       },
                     )
-                  : const Icon(
-                      Icons.image,
-                      size: 40,
-                      color: Colors.grey,
-                    ),
+                  : const Icon(Icons.image, size: 40, color: Colors.grey),
             ),
           ),
           // Info section
@@ -361,12 +523,11 @@ class _DashboardSiswaScreenState extends State<DashboardSiswaScreen> {
                   children: [
                     const CircleAvatar(
                       radius: 10,
-                      backgroundImage:
-                          AssetImage("assets/images/profile.jpeg"),
+                      backgroundImage: AssetImage("assets/images/profile.jpeg"),
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      item.teacher,
+                      item.siswa,
                       style: const TextStyle(
                         fontSize: 11,
                         color: Colors.black54,
@@ -387,10 +548,7 @@ class _DashboardSiswaScreenState extends State<DashboardSiswaScreen> {
                 const SizedBox(height: 5),
                 Text(
                   'Lesson ${item.lesson} of ${item.totalLesson}',
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Colors.black54,
-                  ),
+                  style: const TextStyle(fontSize: 10, color: Colors.black54),
                 ),
               ],
             ),
@@ -411,11 +569,7 @@ class _DashboardSiswaScreenState extends State<DashboardSiswaScreen> {
           color: color,
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 20,
-        ),
+        child: Icon(icon, color: Colors.white, size: 20),
       ),
     );
   }
@@ -455,19 +609,161 @@ class _DashboardSiswaScreenState extends State<DashboardSiswaScreen> {
       ),
     );
   }
+
+  // ================= Day Filter Widget =================
+  Widget _buildDayFilterWidget() {
+    return SizedBox(
+      height: 45,
+      child: ListView.builder(
+        controller: _dayScrollController, // Tambahkan controller
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        physics: const ClampingScrollPhysics(),
+        itemCount: days.length,
+        itemBuilder: (context, index) {
+          final day = days[index];
+          final isSelected = day == selectedDay;
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  _changeDay(index); // Gunakan fungsi changeDay
+                },
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.teal.shade600 : Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: isSelected
+                          ? Colors.teal.shade600
+                          : Colors.grey.shade300,
+                      width: 1.5,
+                    ),
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: Colors.teal.shade200.withOpacity(0.3),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : [],
+                  ),
+                  child: Center(
+                    child: Text(
+                      day,
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : Colors.teal.shade700,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // ================= Jadwal List dengan Swipe =================
+  SliverToBoxAdapter _buildJadwalList() {
+    return SliverToBoxAdapter(
+      // GestureDetector mendeteksi usapan layar
+      child: GestureDetector(
+        onHorizontalDragEnd: (details) {
+          if (details.primaryVelocity! > 0) {
+            // Swipe ke Kanan (Hari Sebelumnya)
+            _changeDay(_currentIndex - 1);
+          } else if (details.primaryVelocity! < 0) {
+            // Swipe ke Kiri (Hari Berikutnya)
+            _changeDay(_currentIndex + 1);
+          }
+        },
+        child: Container(
+          // Min height agar area swipe tetap ada meskipun list kosong
+          constraints: const BoxConstraints(minHeight: 200),
+          color: Colors.transparent, // Transparan agar gesture terdeteksi
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            // Key berubah berdasarkan selectedDay agar animasi berjalan
+            child: Column(
+              key: ValueKey<String>(selectedDay),
+              children: [
+                if (filteredJadwal.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.event_busy,
+                            size: 50,
+                            color: Colors.grey.shade300,
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Tidak ada jadwal untuk hari $selectedDay',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          const Text(
+                            'Geser untuk melihat hari lain',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: filteredJadwal.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: JadwalCard(item: filteredJadwal[index]),
+                      );
+                    },
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 // ================= Model untuk Progress Pelajaran =================
 class ProgressPelajaranItem {
   final String title;
-  final String teacher;
+  final String siswa;
   final int lesson;
   final int totalLesson;
   final String imageUrl;
 
   const ProgressPelajaranItem({
     required this.title,
-    required this.teacher,
+    required this.siswa,
     required this.lesson,
     required this.totalLesson,
     required this.imageUrl,
