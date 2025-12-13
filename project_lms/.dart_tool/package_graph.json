@@ -7,6 +7,7 @@
       "name": "project_lms",
       "version": "1.0.0+1",
       "dependencies": [
+        "carousel_slider",
         "cupertino_icons",
         "file_picker",
         "flutter",
@@ -40,6 +41,13 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "carousel_slider",
+      "version": "5.1.1",
+      "dependencies": [
+        "flutter"
       ]
     },
     {
