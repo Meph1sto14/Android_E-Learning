@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-// --- Import Halaman Bersama (Shared) ---
+// --- Import Controller ---
+import 'package:project_lms/features/siswa/dashboard/controllers/dashboard_siswa_controller.dart';
+import 'package:project_lms/features/siswa/jadwal/controllers/jadwal_controller.dart';
+
+// --- Import Halaman Bersama ---
 import 'package:project_lms/features/home/home_screen.dart';
 import 'package:project_lms/features/auth/login_screen.dart';
 import 'package:project_lms/features/auth/register_screen.dart';
@@ -9,15 +14,27 @@ import 'package:project_lms/features/auth/register_screen.dart';
 import 'package:project_lms/features/guru/dashboard_guru_screen.dart';
 
 // --- Import Halaman Siswa ---
-// (Menggunakan nama file asli Anda)
-import 'package:project_lms/features/siswa/dashboard_siswa_screen.dart';
-import 'package:project_lms/features/siswa/tugas_list_screen.dart';
-import 'package:project_lms/features/siswa/kirim_tugas_screen.dart';
-import 'package:project_lms/features/siswa/nilai_screen.dart';
-import 'package:project_lms/features/siswa/materi_detail_screen.dart';
+import 'package:project_lms/features/siswa/dashboard/screens/dashboard_siswa_screen.dart';
+import 'package:project_lms/features/siswa/tugas/screens/tugas_list_screen.dart';
+import 'package:project_lms/features/siswa/tugas/screens/kirim_tugas_screen.dart';
+import 'package:project_lms/features/siswa/nilai/screens/nilai_screen.dart';
+import 'package:project_lms/features/siswa/materi/screens/materi_detail_screen.dart';
+import 'package:project_lms/features/siswa/jadwal/screens/jadwal_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => DashboardSiswaController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => JadwalController(), // ✅ WAJIB
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -27,67 +44,58 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'LMS App',
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
       theme: ThemeData(
         primarySwatch: Colors.teal,
         scaffoldBackgroundColor: const Color(0xFFF5F5F5),
         fontFamily: 'Poppins',
       ),
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-
-      // --- DAFTAR RUTE APLIKASI ---
       routes: {
-        // Rute Bersama
+        // --- Rute Bersama ---
         '/': (context) => const HomeScreen(),
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
 
-        // Rute Guru
+        // --- Rute Guru ---
         '/dashboard_guru': (context) => const DashboardGuruScreen(),
 
-        // Rute Siswa
-        '/dashboard_siswa': (context) =>
-            const DashboardSiswaScreen(), // Class asli Anda
-        '/tugas': (context) => const TugasListScreen(), // Class asli Anda
+        // --- Rute Siswa ---
+        '/dashboard_siswa': (context) => const DashboardSiswaScreen(),
+        '/jadwal': (context) => const JadwalScreen(), // ✅ TAMBAHAN
+        '/tugas': (context) => const TugasListScreen(),
         '/nilai': (context) => const NilaiScreen(),
 
-        // --- PERBAIKAN: Rute dengan Pengecekan Null ---
+        // --- Kirim Tugas ---
         '/kirim_tugas': (context) {
-          // 1. Ambil argumen sebagai 'dynamic' (bisa null)
-          final dynamic argsRaw = ModalRoute.of(context)!.settings.arguments;
+          final dynamic argsRaw =
+              ModalRoute.of(context)!.settings.arguments;
 
-          // 2. Cek apakah null atau BUKAN Map
           if (argsRaw == null || argsRaw is! Map<String, String>) {
-            // Jika ya, berikan nilai default agar tidak crash
             return const KirimTugasScreen(
               mapel: 'Error',
-              judul: 'Halaman ini tidak bisa diakses langsung',
+              judul: 'Halaman tidak valid',
             );
           }
 
-          // 3. Jika aman, baru gunakan datanya
-          final args = argsRaw;
           return KirimTugasScreen(
-            mapel: args['mapel'] ?? 'Error',
-            judul: args['judul'] ?? 'Error',
+            mapel: argsRaw['mapel'] ?? 'Error',
+            judul: argsRaw['judul'] ?? 'Error',
           );
         },
 
+        // --- Detail Materi ---
         '/materi_detail': (context) {
-          // 1. Ambil argumen sebagai 'dynamic' (bisa null)
-          final dynamic titleRaw = ModalRoute.of(context)!.settings.arguments;
+          final dynamic titleRaw =
+              ModalRoute.of(context)!.settings.arguments;
 
-          // 2. Cek apakah null atau BUKAN String
           if (titleRaw == null || titleRaw is! String) {
-            // Jika ya, berikan nilai default
             return const MateriDetailScreen(
-              title: 'Error: Materi Tidak Ditemukan',
+              title: 'Materi tidak ditemukan',
             );
           }
 
-          // 3. Jika aman, baru gunakan datanya
-          final title = titleRaw;
-          return MateriDetailScreen(title: title);
+          return MateriDetailScreen(title: titleRaw);
         },
       },
     );

@@ -1,18 +1,5 @@
 import 'package:flutter/material.dart';
-
-class JadwalItem {
-  final String mapel;
-  final String hari;
-  final String mulai;
-  final String selesai;
-
-  const JadwalItem({
-    required this.mapel,
-    required this.hari,
-    required this.mulai,
-    required this.selesai,
-  });
-}
+import 'package:project_lms/features/siswa/dashboard/model/jadwal_item_model.dart';
 
 class JadwalCard extends StatelessWidget {
   final JadwalItem item;
@@ -27,27 +14,32 @@ class JadwalCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.shade100,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            item.mapel,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 6,
+            offset: Offset(0, 3),
           ),
-          const SizedBox(height: 6),
-          Text(
-            '${item.hari} • ${item.mulai} - ${item.selesai}',
-            style: const TextStyle(
-              fontSize: 13,
-              color: Colors.black54,
-            ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.schedule, color: Colors.teal),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.mapel,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text('${item.mulai} - ${item.selesai}'),
+            ],
           ),
         ],
       ),

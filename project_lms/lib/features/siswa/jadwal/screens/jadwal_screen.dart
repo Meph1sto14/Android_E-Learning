@@ -1,136 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class JadwalScreen extends StatefulWidget {
+import '../controllers/jadwal_controller.dart';
+import '../model/jadwal_item_model.dart';
+
+class JadwalScreen extends StatelessWidget {
   const JadwalScreen({super.key});
 
   @override
-  State<JadwalScreen> createState() => _JadwalScreenState();
-}
-
-class _JadwalScreenState extends State<JadwalScreen> {
-  String selectedDay = 'Senin';
-  final List<String> days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
-
-  // Data jadwal per hari
-  final Map<String, List<JadwalItem>> jadwalPerHari = {
-    'Senin': [
-      JadwalItem(
-        mataPelajaran: 'Matematika',
-        kodeKelas: 'MTK-101',
-        ruangan: 'SE-07-01',
-        waktuMulai: '07:00',
-        waktuSelesai: '08:30',
-        color: Colors.blue.shade100,
-      ),
-      JadwalItem(
-        mataPelajaran: 'Bahasa Indonesia',
-        kodeKelas: 'BIN-201',
-        ruangan: 'SE-07-02',
-        waktuMulai: '08:30',
-        waktuSelesai: '09:45',
-        color: Colors.red.shade100,
-      ),
-      JadwalItem(
-        mataPelajaran: 'Ilmu Pengetahuan Alam',
-        kodeKelas: 'IPA-301',
-        ruangan: 'SE-08-01',
-        waktuMulai: '10:00',
-        waktuSelesai: '11:30',
-        color: Colors.orange.shade100,
-      ),
-    ],
-    'Selasa': [
-      JadwalItem(
-        mataPelajaran: 'Bahasa Inggris',
-        kodeKelas: 'ENG-101',
-        ruangan: 'SE-07-03',
-        waktuMulai: '07:00',
-        waktuSelesai: '08:30',
-        color: Colors.pink.shade100,
-      ),
-      JadwalItem(
-        mataPelajaran: 'Ilmu Pengetahuan Sosial',
-        kodeKelas: 'IPS-201',
-        ruangan: 'SE-07-04',
-        waktuMulai: '08:30',
-        waktuSelesai: '09:45',
-        color: Colors.amber.shade100,
-      ),
-      JadwalItem(
-        mataPelajaran: 'Pendidikan Pancasila',
-        kodeKelas: 'PKN-101',
-        ruangan: 'SE-08-02',
-        waktuMulai: '10:00',
-        waktuSelesai: '11:30',
-        color: Colors.purple.shade100,
-      ),
-    ],
-    'Rabu': [
-      JadwalItem(
-        mataPelajaran: 'Pendidikan Jasmani',
-        kodeKelas: 'PJK-101',
-        ruangan: 'Lapangan',
-        waktuMulai: '07:00',
-        waktuSelesai: '08:30',
-        color: Colors.green.shade100,
-      ),
-      JadwalItem(
-        mataPelajaran: 'Informatika / TIK',
-        kodeKelas: 'TIK-202',
-        ruangan: 'LAB-01',
-        waktuMulai: '10:00',
-        waktuSelesai: '11:30',
-        color: Colors.indigo.shade100,
-      ),
-    ],
-    'Kamis': [
-      JadwalItem(
-        mataPelajaran: 'Pendidikan Agama',
-        kodeKelas: 'PAI-101',
-        ruangan: 'SE-07-05',
-        waktuMulai: '07:00',
-        waktuSelesai: '08:30',
-        color: Colors.teal.shade100,
-      ),
-      JadwalItem(
-        mataPelajaran: 'Seni Budaya',
-        kodeKelas: 'SBD-101',
-        ruangan: 'SE-09-01',
-        waktuMulai: '08:30',
-        waktuSelesai: '09:45',
-        color: Colors.red.shade200,
-      ),
-      JadwalItem(
-        mataPelajaran: 'Bahasa Jawa',
-        kodeKelas: 'BJW-101',
-        ruangan: 'SE-07-06',
-        waktuMulai: '10:00',
-        waktuSelesai: '11:30',
-        color: Colors.brown.shade100,
-      ),
-    ],
-    'Jumat': [
-      JadwalItem(
-        mataPelajaran: 'Prakarya dan Kewirausahaan',
-        kodeKelas: 'PKW-101',
-        ruangan: 'SE-10-01',
-        waktuMulai: '07:00',
-        waktuSelesai: '08:30',
-        color: Colors.deepPurple.shade100,
-      ),
-      JadwalItem(
-        mataPelajaran: 'Matematika',
-        kodeKelas: 'MTK-102',
-        ruangan: 'SE-07-01',
-        waktuMulai: '08:30',
-        waktuSelesai: '09:45',
-        color: Colors.blue.shade100,
-      ),
-    ],
-  };
-
-  @override
   Widget build(BuildContext context) {
+    final controller = context.watch<JadwalController>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -151,9 +31,7 @@ class _JadwalScreenState extends State<JadwalScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.access_time, color: Colors.black87),
-            onPressed: () {
-              // Action untuk history/riwayat
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -161,7 +39,8 @@ class _JadwalScreenState extends State<JadwalScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
-          // Bulan dan Tahun
+
+          /// Bulan & Tahun
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
@@ -173,15 +52,19 @@ class _JadwalScreenState extends State<JadwalScreen> {
               ),
             ),
           ),
+
           const SizedBox(height: 16),
-          // Tab Hari
-          _buildDayTabs(),
+
+          /// Tab Hari
+          _buildDayTabs(context, controller),
+
           const SizedBox(height: 20),
-          // Header Hari
+
+          /// Header Hari
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              selectedDay,
+              controller.selectedDay,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -189,41 +72,43 @@ class _JadwalScreenState extends State<JadwalScreen> {
               ),
             ),
           ),
+
           const SizedBox(height: 16),
-          // List Jadwal
+
+          /// List Jadwal
           Expanded(
-            child: _buildJadwalList(),
+            child: _buildJadwalList(controller),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDayTabs() {
+  // ================= TAB HARI =================
+  Widget _buildDayTabs(BuildContext context, JadwalController controller) {
     return SizedBox(
       height: 50,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        itemCount: days.length,
+        itemCount: controller.days.length,
         itemBuilder: (context, index) {
-          final day = days[index];
-          final isSelected = day == selectedDay;
+          final day = controller.days[index];
+          final isSelected = day == controller.selectedDay;
+
           return Padding(
             padding: const EdgeInsets.only(right: 12),
             child: InkWell(
-              onTap: () {
-                setState(() {
-                  selectedDay = day;
-                });
-              },
+              onTap: () => controller.changeDay(day),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                 decoration: BoxDecoration(
                   color: isSelected ? Colors.red.shade400 : Colors.white,
                   borderRadius: BorderRadius.circular(25),
                   border: Border.all(
-                    color: isSelected ? Colors.red.shade400 : Colors.grey.shade300,
+                    color:
+                        isSelected ? Colors.red.shade400 : Colors.grey.shade300,
                     width: 2,
                   ),
                 ),
@@ -233,7 +118,8 @@ class _JadwalScreenState extends State<JadwalScreen> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: isSelected ? Colors.white : Colors.grey.shade700,
+                      color:
+                          isSelected ? Colors.white : Colors.grey.shade700,
                     ),
                   ),
                 ),
@@ -245,8 +131,9 @@ class _JadwalScreenState extends State<JadwalScreen> {
     );
   }
 
-  Widget _buildJadwalList() {
-    final jadwalList = jadwalPerHari[selectedDay] ?? [];
+  // ================= LIST JADWAL =================
+  Widget _buildJadwalList(JadwalController controller) {
+    final jadwalList = controller.jadwalHariIni;
 
     if (jadwalList.isEmpty) {
       return Center(
@@ -280,6 +167,7 @@ class _JadwalScreenState extends State<JadwalScreen> {
     );
   }
 
+  // ================= CARD JADWAL =================
   Widget _buildJadwalCard(JadwalItem item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -345,11 +233,8 @@ class _JadwalScreenState extends State<JadwalScreen> {
           const SizedBox(height: 12),
           Row(
             children: [
-              Icon(
-                Icons.access_time,
-                size: 18,
-                color: Colors.grey.shade700,
-              ),
+              Icon(Icons.access_time,
+                  size: 18, color: Colors.grey.shade700),
               const SizedBox(width: 6),
               Text(
                 '${item.waktuMulai} - ${item.waktuSelesai}',
@@ -374,23 +259,4 @@ class _JadwalScreenState extends State<JadwalScreen> {
       1,
     );
   }
-}
-
-// Model untuk Jadwal Item
-class JadwalItem {
-  final String mataPelajaran;
-  final String kodeKelas;
-  final String ruangan;
-  final String waktuMulai;
-  final String waktuSelesai;
-  final Color color;
-
-  JadwalItem({
-    required this.mataPelajaran,
-    required this.kodeKelas,
-    required this.ruangan,
-    required this.waktuMulai,
-    required this.waktuSelesai,
-    required this.color,
-  });
 }
