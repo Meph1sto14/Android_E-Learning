@@ -4,144 +4,82 @@ import '../models/guru_models.dart';
 import '../services/guru_service.dart';
 
 class GuruController extends ChangeNotifier {
-  // --- State Navigasi ---
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
-
-  // --- State Umum ---
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  // --- State Monitor Siswa ---
-  String _selectedKelas = 'Kelas 7B';
-  List<SiswaMonitor> _daftarSiswa = [];
-  
+  String _selectedKelas = '7A';
   String get selectedKelas => _selectedKelas;
+  
+  List<SiswaMonitor> _daftarSiswa = [];
   List<SiswaMonitor> get daftarSiswa => _daftarSiswa;
 
-  // --- State Penilaian Tugas ---
   String _selectedFilter = 'Semua';
-  List<TugasUntukDinilai> _allTugas = [];
-  
   String get selectedFilter => _selectedFilter;
+  List<TugasUntukDinilai> _allTugas = [];
 
-  // --- State Form (Presistensi Data) ---
   final uploadMateriData = UploadMateriModel();
   final uploadTugasData = UploadTugasModel();
 
-  // --- Konstruktor ---
-  GuruController() {
-    fetchSiswa();
-    fetchTugas();
-  }
+  GuruController() { initLoad(); }
 
-  // --- Method Navigasi ---
-  void setSelectedIndex(int index) {
-    _selectedIndex = index;
-    notifyListeners();
-  }
-
-  // --- Method Monitor Siswa ---
-  void updateKelas(String newKelas) {
-    _selectedKelas = newKelas;
-    fetchSiswa(); 
-  }
-
-  Future<void> fetchSiswa() async {
-    _isLoading = true;
-    notifyListeners();
+  Future<void> initLoad() async {
+    _isLoading = true; notifyListeners();
     try {
-      _daftarSiswa = await GuruService.getDaftarSiswa();
-    } catch (e) {
-      debugPrint("Error fetching siswa: $e");
+      await fetchSiswa();
+      await fetchTugas();
     } finally {
-      _isLoading = false;
-      notifyListeners();
+      _isLoading = false; notifyListeners();
     }
   }
 
-  // --- Method Penilaian Tugas ---
+  void setSelectedIndex(int index) { _selectedIndex = index; notifyListeners(); }
+  void updateFilter(String f) { _selectedFilter = f; notifyListeners(); }
+  
   List<TugasUntukDinilai> get filteredTugas {
     if (_selectedFilter == 'Semua') return _allTugas;
     return _allTugas.where((t) => t.status == _selectedFilter).toList();
   }
 
-  void updateFilter(String newFilter) {
-    _selectedFilter = newFilter;
+  Future<void> fetchSiswa() async {
+    _daftarSiswa = await GuruService.getDaftarSiswa();
     notifyListeners();
   }
 
   Future<void> fetchTugas() async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      _allTugas = await GuruService.getDaftarTugas(); 
-    } catch (e) {
-      debugPrint("Error fetching tugas: $e");
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
-
-  // --- Method Upload Materi ---
-  void updateMateriFile(File file, String name) {
-    uploadMateriData.selectedFile = file;
-    uploadMateriData.fileName = name;
+    _allTugas = await GuruService.getDaftarTugas();
     notifyListeners();
   }
 
-  void updateMateriDate(DateTime date) {
-    uploadMateriData.tanggalPublikasi = date;
-    notifyListeners();
-  }
+  void updateMateriFile(File f, String n) { uploadMateriData.selectedFile = f; uploadMateriData.fileName = n; notifyListeners(); }
+  void updateTugasFile(File f, String n) { uploadTugasData.selectedFile = f; uploadTugasData.fileName = n; notifyListeners(); }
+  void updateTugasDate(DateTime d, bool isD) { if (isD) uploadTugasData.tanggalDeadline = d; else uploadTugasData.tanggalMulai = d; notifyListeners(); }
 
   Future<bool> submitUploadMateri() async {
-    _isLoading = true;
-    notifyListeners();
-    bool success = await GuruService.uploadMateri(uploadMateriData);
-    if (success) uploadMateriData.reset();
-    _isLoading = false;
-    notifyListeners();
-    return success;
+    _isLoading = true; notifyListeners();
+    try {
+      String? url = uploadMateriData.selectedFile != null 
+          ? await GuruService.uploadFile(uploadMateriData.selectedFile!, uploadMateriData.fileName!, 'materi_files') 
+          : null;
+      bool res = await GuruService.uploadMateri(uploadMateriData, url);
+      if (res) uploadMateriData.reset();
+      return res;
+    } finally { _isLoading = false; notifyListeners(); }
   }
 
-  // --- Method Upload Tugas (NEW) ---
-
-  /// Mengupdate file tugas yang dipilih
-  void updateTugasFile(File file, String name) {
-    uploadTugasData.selectedFile = file;
-    uploadTugasData.fileName = name;
-    notifyListeners();
-  }
-
-  /// Mengupdate tanggal (mulai atau deadline)
-  void updateTugasDate(DateTime date, bool isDeadline) {
-    if (isDeadline) {
-      uploadTugasData.tanggalDeadline = date;
-    } else {
-      uploadTugasData.tanggalMulai = date;
-    }
-    notifyListeners();
-  }
-
-  /// Memproses pengiriman data tugas ke service
   Future<bool> submitPublishTugas() async {
-    _isLoading = true;
-    notifyListeners();
-
-    bool success = await GuruService.publishTugas(uploadTugasData);
-    
-    if (success) {
-      uploadTugasData.reset(); // Reset form jika berhasil
-    }
-
-    _isLoading = false;
-    notifyListeners();
-    return success;
+    _isLoading = true; notifyListeners();
+    try {
+      String? url = uploadTugasData.selectedFile != null 
+          ? await GuruService.uploadFile(uploadTugasData.selectedFile!, uploadTugasData.fileName!, 'lampiran_tugas') 
+          : null;
+      bool res = await GuruService.publishTugas(uploadTugasData, url);
+      if (res) uploadTugasData.reset();
+      return res;
+    } finally { _isLoading = false; notifyListeners(); }
   }
 
-  // --- Lifecycle ---
   @override
   void dispose() {
     uploadMateriData.dispose();

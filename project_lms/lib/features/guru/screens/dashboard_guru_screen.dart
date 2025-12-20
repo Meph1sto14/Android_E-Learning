@@ -59,10 +59,12 @@ class DashboardGuruScreen extends StatelessWidget {
         index: controller.selectedIndex,
         children: const [
           _DashboardTabContent(),
+          UploadTugasScreen(),
+          UploadMateriScreen(),
           MonitorSiswaScreen(),
           PenilaianTugasScreen(),
-          UploadMateriScreen(),
-          UploadTugasScreen(),
+          
+          
         ],
       ),
     );

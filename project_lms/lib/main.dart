@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart'; // ✅ Pastikan sudah install package ini
+
+// --- Import Config ---
+import 'package:project_lms/shared/config/supabase_config.dart'; // ✅ Pastikan file ini sudah dibuat
 
 // --- Import Controllers ---
 import 'package:project_lms/features/siswa/dashboard/controllers/dashboard_siswa_controller.dart';
@@ -10,7 +14,7 @@ import 'package:project_lms/features/guru/controllers/guru_controller.dart';
 import 'package:project_lms/features/home/home_screen.dart';
 import 'package:project_lms/features/auth/login_screen.dart';
 import 'package:project_lms/features/auth/register_screen.dart';
-import 'package:project_lms/features/guru/screens/dashboard_guru_screen.dart'; // ✅ Path Baru
+import 'package:project_lms/features/guru/screens/dashboard_guru_screen.dart';
 import 'package:project_lms/features/siswa/dashboard/screens/dashboard_siswa_screen.dart';
 import 'package:project_lms/features/siswa/jadwal/screens/jadwal_screen.dart';
 import 'package:project_lms/features/siswa/tugas/screens/tugas_list_screen.dart';
@@ -18,7 +22,16 @@ import 'package:project_lms/features/siswa/tugas/screens/kirim_tugas_screen.dart
 import 'package:project_lms/features/siswa/nilai/screens/nilai_screen.dart';
 import 'package:project_lms/features/siswa/materi/screens/materi_detail_screen.dart';
 
-void main() {
+Future<void> main() async {
+  // 1. Wajib panggil ini karena main sekarang bersifat async
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 2. Inisialisasi Supabase
+  await Supabase.initialize(
+    url: SupabaseConfig.url,
+    anonKey: SupabaseConfig.anonKey,
+  );
+
   runApp(
     MultiProvider(
       providers: [

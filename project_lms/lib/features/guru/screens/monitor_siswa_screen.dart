@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../controllers/guru_controller.dart';
+import '../models/guru_models.dart';
 
 class MonitorSiswaScreen extends StatelessWidget {
   const MonitorSiswaScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Kita menggunakan Consumer agar hanya bagian yang perlu saja yang me-rebuild
     return Consumer<GuruController>(
       builder: (context, controller, child) {
         return Scaffold(
@@ -16,76 +16,37 @@ class MonitorSiswaScreen extends StatelessWidget {
             backgroundColor: Colors.white,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_new,
-                color: Colors.black,
-                size: 22,
-              ),
-              onPressed: () =>
-                  controller.setSelectedIndex(0), // Kembali ke Dashboard
+              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 22),
+              onPressed: () => controller.setSelectedIndex(0),
             ),
             title: const Text(
               'Monitor Aktivitas Siswa',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18),
             ),
           ),
           body: controller.isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                ) // Tampilkan loading jika sedang fetch data
+              ? const Center(child: CircularProgressIndicator())
               : ListView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   children: [
                     _buildStatistikSection(),
                     const SizedBox(height: 25),
-
-                    // --- Bagian Header Daftar & Tombol Refresh ---
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           'Daftar siswa ${controller.selectedKelas}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                         ),
                         OutlinedButton.icon(
-                          onPressed: () => controller
-                              .fetchSiswa(), // Memanggil fetch dari controller
-                          icon: const Icon(
-                            Icons.refresh,
-                            size: 20,
-                            color: Colors.teal,
-                          ),
-                          label: const Text(
-                            'Refresh',
-                            style: TextStyle(
-                              color: Colors.teal,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(
-                              color: Colors.teal,
-                              width: 1.5,
-                            ),
-                          ),
+                          onPressed: () => controller.fetchSiswa(), // SEKARANG SUDAH ADA
+                          icon: const Icon(Icons.refresh, size: 20, color: Colors.teal),
+                          label: const Text('Refresh', style: TextStyle(color: Colors.teal, fontWeight: FontWeight.bold)),
+                          style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.teal, width: 1.5)),
                         ),
                       ],
                     ),
                     const SizedBox(height: 15),
-
-                    // --- Daftar Siswa ---
                     _buildSiswaList(controller),
                   ],
                 ),
@@ -94,101 +55,11 @@ class MonitorSiswaScreen extends StatelessWidget {
     );
   }
 
-  // --- Widget Statistik ---
-  Widget _buildStatistikSection() {
-    return GridView.count(
-      crossAxisCount: 2,
-      crossAxisSpacing: 15,
-      mainAxisSpacing: 15,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      childAspectRatio: 1.3,
-      children: [
-        _buildStatCard(
-          'Siswa Online',
-          '12',
-          Icons.sensors,
-          Colors.green.shade900,
-        ),
-        _buildStatCard(
-          'Total Siswa',
-          '28',
-          Icons.people_alt,
-          Colors.blue.shade900,
-        ),
-        _buildStatCard(
-          'Tugas Aktif',
-          '5',
-          Icons.assignment,
-          Colors.orange.shade900,
-        ),
-        _buildStatCard(
-          'Perlu Review',
-          '8',
-          Icons.rate_review,
-          Colors.purple.shade900,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.black12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: color, size: 28),
-          const Spacer(),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 13,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // --- Widget List Siswa menggunakan data dari Controller ---
+  // --- Widget Helper: List Siswa ---
   Widget _buildSiswaList(GuruController controller) {
     if (controller.daftarSiswa.isEmpty) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Text('Tidak ada data siswa.'),
-        ),
-      );
+      return const Center(child: Padding(padding: EdgeInsets.all(20.0), child: Text('Tidak ada data siswa.')));
     }
-
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -196,158 +67,41 @@ class MonitorSiswaScreen extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 16),
       itemBuilder: (context, index) {
         final siswa = controller.daftarSiswa[index];
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.black26),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 28,
-                          backgroundColor: Colors.teal.shade100,
-                          child: Text(
-                            siswa.avatar,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.teal,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        if (siswa.isOnline)
-                          const Positioned(
-                            bottom: 2,
-                            right: 2,
-                            child: GreenDotIndicator(),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(width: 15),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            siswa.nama,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Text(
-                            'NIS: ${siswa.nis}',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    _buildStatusChip(siswa.isOnline),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Divider(height: 1, color: Colors.black38),
-                ),
-                _buildInfoRow(
-                  'Terakhir Aktif',
-                  siswa.terakhirOnline,
-                  Icons.access_time,
-                ),
-                const SizedBox(height: 10),
-                _buildInfoRow(
-                  'Progress Tugas',
-                  siswa.tugasSelesai,
-                  Icons.task_alt,
-                ),
-                const SizedBox(height: 15),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: LinearProgressIndicator(
-                    value: siswa.progresMateri,
-                    backgroundColor: Colors.grey.shade300,
-                    color: Colors.teal.shade800,
-                    minHeight: 12,
-                  ),
-                ),
-              ],
-            ),
+        return Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: ListTile(
+            leading: CircleAvatar(child: Text(siswa.avatar)),
+            title: Text(siswa.nama, style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('NIS: ${siswa.nis} | Progress: ${(siswa.progresMateri * 100).toInt()}%'),
+            trailing: Icon(Icons.circle, color: siswa.isOnline ? Colors.green : Colors.grey, size: 12),
           ),
         );
       },
     );
   }
 
-  Widget _buildStatusChip(bool online) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: online ? Colors.green.shade800 : Colors.black,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        online ? 'ONLINE' : 'OFFLINE',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value, IconData icon) {
-    return Row(
+  // --- Widget Helper: Statistik ---
+  Widget _buildStatistikSection() {
+    return GridView.count(
+      crossAxisCount: 2, crossAxisSpacing: 15, mainAxisSpacing: 15, shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(), childAspectRatio: 1.3,
       children: [
-        Icon(icon, size: 18, color: Colors.black),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const Spacer(),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
+        _buildStatCard('Siswa Online', '3', Icons.sensors, Colors.green),
+        _buildStatCard('Total Siswa', '1', Icons.people_alt, Colors.blue),
       ],
     );
   }
-}
 
-class GreenDotIndicator extends StatelessWidget {
-  const GreenDotIndicator({super.key});
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
     return Container(
-      height: 14,
-      width: 14,
-      decoration: BoxDecoration(
-        color: Colors.green,
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.white, width: 2.5),
-      ),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15), border: Border.all(color: Colors.black12)),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Icon(icon, color: color, size: 28),
+        const Spacer(),
+        Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(title, style: const TextStyle(fontSize: 12)),
+      ]),
     );
   }
 }

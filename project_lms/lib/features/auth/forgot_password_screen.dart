@@ -81,7 +81,6 @@ class ForgotPasswordScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: Implementasi logika pengiriman permintaan reset
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(

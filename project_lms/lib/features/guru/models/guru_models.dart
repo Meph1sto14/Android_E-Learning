@@ -1,58 +1,32 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-// --- MODEL MONITOR SISWA ---
+class OptionModel {
+  final String id, nama;
+  OptionModel({required this.id, required this.nama});
+}
+
 class SiswaMonitor {
-  final String nama;
-  final String nis;
-  final String avatar;
+  final String nama, nis, avatar, terakhirOnline, tugasSelesai;
   final bool isOnline;
-  final String terakhirOnline;
   final double progresMateri;
-  final String tugasSelesai;
-
-  SiswaMonitor({
-    required this.nama,
-    required this.nis,
-    required this.avatar,
-    required this.isOnline,
-    required this.terakhirOnline,
-    required this.progresMateri,
-    required this.tugasSelesai,
-  });
+  SiswaMonitor({required this.nama, required this.nis, required this.avatar, required this.isOnline, required this.terakhirOnline, required this.progresMateri, required this.tugasSelesai});
 }
 
-// --- MODEL PENILAIAN TUGAS ---
 class TugasUntukDinilai {
-  final String judul;
-  final String kelas;
-  final String mataPelajaran;
-  final int totalSiswa;
-  final int sudahSubmit;
-  final int belumDinilai;
+  final String judul, kelas, mataPelajaran, status;
+  final int totalSiswa, sudahSubmit, belumDinilai;
   final double rataRata;
-  final String status;
-
-  TugasUntukDinilai({
-    required this.judul,
-    required this.kelas,
-    required this.mataPelajaran,
-    required this.totalSiswa,
-    required this.sudahSubmit,
-    required this.belumDinilai,
-    required this.rataRata,
-    required this.status,
-  });
+  TugasUntukDinilai({required this.judul, required this.kelas, required this.mataPelajaran, required this.totalSiswa, required this.sudahSubmit, required this.belumDinilai, required this.rataRata, required this.status});
 }
 
-// --- MODEL UPLOAD MATERI ---
 class UploadMateriModel {
-  final formKey = GlobalKey<FormState>(); 
-  
+  final formKey = GlobalKey<FormState>();
   final judulController = TextEditingController();
   final deskripsiController = TextEditingController();
-  String? selectedMapel;
-  String? selectedKelas;
+  final mapelController = TextEditingController(); // Ketik Manual
+  final kelasController = TextEditingController(); // Ketik Manual
+  
   String? selectedKategori;
   String? selectedStatus = 'Aktif';
   DateTime? tanggalPublikasi;
@@ -62,13 +36,15 @@ class UploadMateriModel {
   void dispose() {
     judulController.dispose();
     deskripsiController.dispose();
+    mapelController.dispose();
+    kelasController.dispose();
   }
 
   void reset() {
     judulController.clear();
     deskripsiController.clear();
-    selectedMapel = null;
-    selectedKelas = null;
+    mapelController.clear();
+    kelasController.clear();
     selectedKategori = null;
     tanggalPublikasi = null;
     selectedFile = null;
@@ -76,29 +52,28 @@ class UploadMateriModel {
   }
 }
 
-// --- MODEL UPLOAD TUGAS (UPDATED) ---
 class UploadTugasModel {
   final formKey = GlobalKey<FormState>();
-
   final judulController = TextEditingController();
   final deskripsiController = TextEditingController();
-  String? selectedMapel;
-  String? selectedKelas;
-  DateTime? tanggalMulai;
-  DateTime? tanggalDeadline;
+  final mapelController = TextEditingController(); // Ketik Manual
+  final kelasController = TextEditingController(); // Ketik Manual
+  DateTime? tanggalMulai, tanggalDeadline;
   File? selectedFile;
   String? fileName;
 
   void dispose() {
     judulController.dispose();
     deskripsiController.dispose();
+    mapelController.dispose();
+    kelasController.dispose();
   }
 
   void reset() {
     judulController.clear();
     deskripsiController.clear();
-    selectedMapel = null;
-    selectedKelas = null;
+    mapelController.clear();
+    kelasController.clear();
     tanggalMulai = null;
     tanggalDeadline = null;
     selectedFile = null;

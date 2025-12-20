@@ -227,7 +227,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          // TODO: Implementasi logika registrasi
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Registrasi Berhasil!'),
