@@ -24,13 +24,14 @@ class DashboardGuruScreen extends StatelessWidget {
         // JUDUL: Sekarang aman karena profil ada di actions
         title: const Text(
           'E-Learning SMPN 3',
-          style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         // ACTIONS: Profil ditaruh di sini agar otomatis rata kanan
-        actions: [
-          _buildProfileMenu(context),
-          const SizedBox(width: 8),
-        ],
+        actions: [_buildProfileMenu(context), const SizedBox(width: 8)],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(110.0),
           child: Container(
@@ -58,16 +59,21 @@ class DashboardGuruScreen extends StatelessWidget {
         index: controller.selectedIndex,
         children: const [
           _DashboardTabContent(),
-          UploadTugasScreen(),
-          UploadMateriScreen(),
           MonitorSiswaScreen(),
           PenilaianTugasScreen(),
+          UploadMateriScreen(),
+          UploadTugasScreen(),
         ],
       ),
     );
   }
 
-  Widget _buildMenuButton(BuildContext context, String text, int index, GuruController controller) {
+  Widget _buildMenuButton(
+    BuildContext context,
+    String text,
+    int index,
+    GuruController controller,
+  ) {
     final bool isSelected = controller.selectedIndex == index;
     return FilterChip(
       label: Text(text),
@@ -103,7 +109,13 @@ class DashboardGuruScreen extends StatelessWidget {
             children: [
               Icon(Icons.logout, color: Colors.red, size: 20),
               SizedBox(width: 10),
-              Text('Log Out', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+              Text(
+                'Log Out',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),
@@ -115,15 +127,36 @@ class DashboardGuruScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
-              Text('Selamat Datang,', style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold)),
-              Text('Bu Sari Indah', style: TextStyle(color: Colors.black, fontSize: 11, fontWeight: FontWeight.bold)),
+              Text(
+                'Selamat Datang,',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Bu Sari Indah',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           const SizedBox(width: 8),
           const CircleAvatar(
             radius: 16,
             backgroundColor: Colors.teal,
-            child: Text('SI', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+            child: Text(
+              'SI',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
           const Icon(Icons.arrow_drop_down, color: Colors.black),
         ],
@@ -142,11 +175,32 @@ class _DashboardTabContent extends StatelessWidget {
       children: [
         _buildAnnouncementBanner(),
         const SizedBox(height: 20),
-        _buildClassCard('Bahasa Inggris', 'Kelas 7-A', 3, 10, 32, Colors.blue.shade900),
+        _buildClassCard(
+          'Bahasa Inggris',
+          'Kelas 7-A',
+          3,
+          10,
+          32,
+          Colors.blue.shade900,
+        ),
         const SizedBox(height: 16),
-        _buildClassCard('Bahasa Inggris', 'Kelas 7-B', 5, 8, 32, Colors.orange.shade900),
+        _buildClassCard(
+          'Bahasa Inggris',
+          'Kelas 7-B',
+          5,
+          8,
+          32,
+          Colors.orange.shade900,
+        ),
         const SizedBox(height: 16),
-        _buildClassCard('Bahasa Inggris', 'Kelas 7-C', 1, 12, 32, Colors.green.shade900),
+        _buildClassCard(
+          'Bahasa Inggris',
+          'Kelas 7-C',
+          1,
+          12,
+          32,
+          Colors.green.shade900,
+        ),
       ],
     );
   }
@@ -166,7 +220,11 @@ class _DashboardTabContent extends StatelessWidget {
           const Expanded(
             child: Text(
               'Ada 5 tugas baru yang perlu dinilai hari ini.',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13),
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
             ),
           ),
         ],
@@ -174,7 +232,14 @@ class _DashboardTabContent extends StatelessWidget {
     );
   }
 
-  Widget _buildClassCard(String mapel, String kelas, int tugasDinilai, int pengumpulan, int total, Color color) {
+  Widget _buildClassCard(
+    String mapel,
+    String kelas,
+    int tugasDinilai,
+    int pengumpulan,
+    int total,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 16),
@@ -182,24 +247,53 @@ class _DashboardTabContent extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.black26),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5)],
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(mapel, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.black)),
-          Text(kelas, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          Text(
+            mapel,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              color: Colors.black,
+            ),
+          ),
+          Text(
+            kelas,
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           const Divider(height: 24, color: Colors.black26),
-          Text('$tugasDinilai Tugas Perlu Dinilai', style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14)),
+          Text(
+            '$tugasDinilai Tugas Perlu Dinilai',
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+          ),
           const SizedBox(height: 12),
           LinearProgressIndicator(
-            value: (pengumpulan / total).clamp(0.0, 1.0), 
-            color: color, 
+            value: (pengumpulan / total).clamp(0.0, 1.0),
+            color: color,
             backgroundColor: Colors.grey.shade300,
             minHeight: 8,
           ),
           const SizedBox(height: 8),
-          Text('Progres: $pengumpulan/$total Siswa', style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12)),
+          Text(
+            'Progres: $pengumpulan/$total Siswa',
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
         ],
       ),
     );

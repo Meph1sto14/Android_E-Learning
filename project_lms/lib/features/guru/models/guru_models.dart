@@ -47,6 +47,8 @@ class TugasUntukDinilai {
 
 // --- MODEL UPLOAD MATERI ---
 class UploadMateriModel {
+  final formKey = GlobalKey<FormState>(); 
+  
   final judulController = TextEditingController();
   final deskripsiController = TextEditingController();
   String? selectedMapel;
@@ -61,10 +63,23 @@ class UploadMateriModel {
     judulController.dispose();
     deskripsiController.dispose();
   }
+
+  void reset() {
+    judulController.clear();
+    deskripsiController.clear();
+    selectedMapel = null;
+    selectedKelas = null;
+    selectedKategori = null;
+    tanggalPublikasi = null;
+    selectedFile = null;
+    fileName = null;
+  }
 }
 
-// --- MODEL UPLOAD TUGAS ---
+// --- MODEL UPLOAD TUGAS (UPDATED) ---
 class UploadTugasModel {
+  final formKey = GlobalKey<FormState>();
+
   final judulController = TextEditingController();
   final deskripsiController = TextEditingController();
   String? selectedMapel;
@@ -77,5 +92,16 @@ class UploadTugasModel {
   void dispose() {
     judulController.dispose();
     deskripsiController.dispose();
+  }
+
+  void reset() {
+    judulController.clear();
+    deskripsiController.clear();
+    selectedMapel = null;
+    selectedKelas = null;
+    tanggalMulai = null;
+    tanggalDeadline = null;
+    selectedFile = null;
+    fileName = null;
   }
 }
