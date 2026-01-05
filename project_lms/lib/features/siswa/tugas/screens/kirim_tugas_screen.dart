@@ -31,7 +31,10 @@ class _KirimTugasScreenState extends State<KirimTugasScreen> {
   // ===================== Kirim Tugas =====================
   void _kirimTugas() {
     if (_selectedFile == null) {
-      _showSnackBar('Pilih file terlebih dahulu sebelum mengirim!', Colors.redAccent);
+      _showSnackBar(
+        'Pilih file terlebih dahulu sebelum mengirim!',
+        Colors.redAccent,
+      );
       return;
     }
 
@@ -73,6 +76,7 @@ class _KirimTugasScreenState extends State<KirimTugasScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(),
+          _buildDeskripsiTugas(), // ✅ DESKRIPSI TUGAS
           const SizedBox(height: 24),
           _buildCatatanField(),
           const SizedBox(height: 20),
@@ -119,6 +123,39 @@ class _KirimTugasScreenState extends State<KirimTugasScreen> {
     );
   }
 
+  // ===================== DESKRIPSI TUGAS =====================
+  Widget _buildDeskripsiTugas() {
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.teal.shade50,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.teal.shade100),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text(
+            'Deskripsi Tugas:',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: Colors.teal,
+            ),
+          ),
+          SizedBox(height: 6),
+          Text(
+            'Kerjakan soal pada buku paket halaman 25–27. '
+            'Jawaban ditulis di buku tulis kemudian diunggah '
+            'dalam bentuk foto atau PDF.',
+            style: TextStyle(fontSize: 13, color: Colors.black87),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCatatanField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,14 +195,22 @@ class _KirimTugasScreenState extends State<KirimTugasScreen> {
 
   Widget _buildSubmitButton() {
     return ElevatedButton.icon(
-      onPressed: _kirimTugas,
-      icon: const Icon(Icons.send),
-      label: const Text('Kirim Sekarang'),
+      onPressed: _kirimTugas, // LOGIC TETAP
+      icon: const Icon(Icons.send, color: Colors.white),
+      label: const Text(
+        'KIRIM TUGAS SEKARANG',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          color: Colors.white,
+        ),
+      ),
       style: ElevatedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 50),
-        backgroundColor: Colors.teal.shade700,
+        minimumSize: const Size(double.infinity, 56),
+        backgroundColor: Colors.grey.shade900, // kontras & jelas
+        elevation: 4,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );

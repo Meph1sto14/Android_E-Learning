@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_lms/features/siswa/dashboard/model/materi_item_model.dart';
+import 'package:project_lms/features/siswa/materi/model/materi_item_model.dart';
 
 class MateriCard extends StatelessWidget {
   final MateriItem item;

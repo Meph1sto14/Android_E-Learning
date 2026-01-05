@@ -19,9 +19,12 @@ class DashboardSiswaScreen extends StatelessWidget {
         slivers: [
           SliverToBoxAdapter(child: _buildTopHeader(context)),
           SliverToBoxAdapter(child: _buildHeader(c)),
+
           _buildSectionTitle("Mata Pelajaran Anda"),
-          _buildMateriGrid(c),
+          _buildMateriGrid(c, context), // 🔥 TAMBAHKAN context
+
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
+
           _buildSectionTitle("Jadwal Pelajaran"),
           SliverToBoxAdapter(
             child: Column(
@@ -32,6 +35,7 @@ class DashboardSiswaScreen extends StatelessWidget {
             ),
           ),
           _buildJadwalList(c),
+
           const SliverToBoxAdapter(child: SizedBox(height: 40)),
         ],
       ),
@@ -47,8 +51,8 @@ class DashboardSiswaScreen extends StatelessWidget {
           color: Colors.white,
           child: Row(
             children: [
-              const Row(
-                children: [
+              Row(
+                children: const [
                   Icon(Icons.school, color: Colors.teal, size: 30),
                   SizedBox(width: 8),
                   Text(
@@ -62,8 +66,8 @@ class DashboardSiswaScreen extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              const Row(
-                children: [
+              Row(
+                children: const [
                   Text(
                     "Lina Melinda",
                     style: TextStyle(
@@ -74,8 +78,7 @@ class DashboardSiswaScreen extends StatelessWidget {
                   SizedBox(width: 10),
                   CircleAvatar(
                     radius: 20,
-                    backgroundImage:
-                        AssetImage("assets/images/profile.jpeg"),
+                    child: Icon(Icons.person),
                   ),
                 ],
               ),
@@ -131,7 +134,10 @@ class DashboardSiswaScreen extends StatelessWidget {
   }
 
   Widget _menuItemClickable(
-      BuildContext context, String title, String route) {
+    BuildContext context,
+    String title,
+    String route,
+  ) {
     return InkWell(
       onTap: () => Navigator.pushNamed(context, route),
       child: Text(
@@ -153,8 +159,9 @@ class DashboardSiswaScreen extends StatelessWidget {
         gradient: LinearGradient(
           colors: [Colors.teal.shade700, Colors.teal.shade400],
         ),
-        borderRadius:
-            const BorderRadius.vertical(bottom: Radius.circular(30)),
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(30),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -167,7 +174,7 @@ class DashboardSiswaScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Progress Pelajaran Anda',
+            "Progress Pelajaran Anda",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -204,13 +211,9 @@ class DashboardSiswaScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            _navButton(Icons.chevron_left, () {
-              c.scrollProgressLeft();
-            }),
+            _navButton(Icons.chevron_left, c.scrollProgressLeft),
             const SizedBox(width: 8),
-            _navButton(Icons.chevron_right, () {
-              c.scrollProgressRight();
-            }),
+            _navButton(Icons.chevron_right, c.scrollProgressRight),
           ],
         ),
       ],
@@ -249,8 +252,9 @@ class DashboardSiswaScreen extends StatelessWidget {
     );
   }
 
-  // ================= MATERI GRID =================
-  SliverPadding _buildMateriGrid(DashboardSiswaController c) {
+  // ================= MATERI GRID ================= 
+  // 🔥 DIPERBARUI: Tambah parameter context dan wrap dengan GestureDetector
+  SliverPadding _buildMateriGrid(DashboardSiswaController c, BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       sliver: SliverGrid(
@@ -261,8 +265,37 @@ class DashboardSiswaScreen extends StatelessWidget {
           childAspectRatio: 0.95,
         ),
         delegate: SliverChildBuilderDelegate(
-          (context, index) =>
-              MateriCard(item: c.mataPelajaran[index]),
+          (context, index) {
+            final item = c.mataPelajaran[index];
+            
+            // 🔥 WRAP dengan GestureDetector untuk handle tap
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                print('════════════════════════════════');
+                print('CARD DIKLIK: ${item.title}');
+                print('Index: $index');
+                print('════════════════════════════════');
+                
+                // Tampilkan SnackBar untuk konfirmasi visual
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Membuka materi ${item.title}...'),
+                    duration: const Duration(milliseconds: 800),
+                    backgroundColor: Colors.teal,
+                  ),
+                );
+                
+                // Navigasi ke halaman detail materi
+                Navigator.pushNamed(
+                  context,
+                  '/materi_detail',
+                  arguments: item.title,
+                );
+              },
+              child: MateriCard(item: item),
+            );
+          },
           childCount: c.mataPelajaran.length,
         ),
       ),
@@ -287,23 +320,20 @@ class DashboardSiswaScreen extends StatelessWidget {
             child: InkWell(
               onTap: () => c.changeDay(index),
               child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
-                  color:
-                      isSelected ? Colors.teal : Colors.white,
+                  color: isSelected ? Colors.teal : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: isSelected
-                        ? Colors.teal
-                        : Colors.grey.shade300,
+                    color:
+                        isSelected ? Colors.teal : Colors.grey.shade300,
                   ),
                 ),
                 child: Text(
                   day,
                   style: TextStyle(
-                    color:
-                        isSelected ? Colors.white : Colors.teal,
+                    color: isSelected ? Colors.white : Colors.teal,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -335,24 +365,19 @@ class DashboardSiswaScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(40),
                   child: Text(
-                    'Tidak ada jadwal hari ${c.selectedDay}',
-                    style: TextStyle(
-                      color: Colors.grey.shade500,
-                    ),
+                    "Tidak ada jadwal hari ${c.selectedDay}",
+                    style: TextStyle(color: Colors.grey.shade500),
                   ),
                 )
               else
                 ListView.builder(
                   shrinkWrap: true,
-                  physics:
-                      const NeverScrollableScrollPhysics(),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20),
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   itemCount: c.filteredJadwal.length,
                   itemBuilder: (context, index) {
                     return Padding(
-                      padding:
-                          const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.only(bottom: 12),
                       child: JadwalCard(
                         item: c.filteredJadwal[index],
                       ),

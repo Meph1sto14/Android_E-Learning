@@ -1,9 +1,10 @@
+/// The above code is a Flutter application that initializes Supabase, sets up routes for different screens, and utilizes Provider for state management.
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart'; // ✅ Pastikan sudah install package ini
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // --- Import Config ---
-import 'package:project_lms/shared/config/supabase_config.dart'; // ✅ Pastikan file ini sudah dibuat
+import 'package:project_lms/shared/config/supabase_config.dart';
 
 // --- Import Controllers ---
 import 'package:project_lms/features/siswa/dashboard/controllers/dashboard_siswa_controller.dart';
@@ -20,13 +21,15 @@ import 'package:project_lms/features/siswa/jadwal/screens/jadwal_screen.dart';
 import 'package:project_lms/features/siswa/tugas/screens/tugas_list_screen.dart';
 import 'package:project_lms/features/siswa/tugas/screens/kirim_tugas_screen.dart';
 import 'package:project_lms/features/siswa/nilai/screens/nilai_screen.dart';
+
+// 🔥 MATERI
+import 'package:project_lms/features/siswa/materi/screens/mapel_screen.dart';
+import 'package:project_lms/features/siswa/materi/screens/materi_screen.dart';
 import 'package:project_lms/features/siswa/materi/screens/materi_detail_screen.dart';
 
 Future<void> main() async {
-  // 1. Wajib panggil ini karena main sekarang bersifat async
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 2. Inisialisasi Supabase
   await Supabase.initialize(
     url: SupabaseConfig.url,
     anonKey: SupabaseConfig.anonKey,
@@ -63,34 +66,52 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginScreen(),
         '/register': (context) => const RegisterScreen(),
 
-        // --- Rute Guru ---
+        // ===== GURU =====
         '/dashboard_guru': (context) => const DashboardGuruScreen(),
 
-        // --- Rute Siswa ---
+        // ===== SISWA =====
         '/dashboard_siswa': (context) => const DashboardSiswaScreen(),
         '/jadwal': (context) => const JadwalScreen(),
         '/tugas': (context) => const TugasListScreen(),
         '/nilai': (context) => const NilaiScreen(),
 
-        // --- Rute Dynamic (Kirim Tugas) ---
+        // ===== MATERI =====
+        '/mapel': (context) => const MapelScreen(),
+
+        '/materi': (context) {
+          final dynamic mapelRaw =
+              ModalRoute.of(context)!.settings.arguments;
+          if (mapelRaw == null || mapelRaw is! String) {
+            return const MateriScreen(mapel: 'Tidak valid');
+          }
+          return MateriScreen(mapel: mapelRaw);
+        },
+
+        '/materi_detail': (context) {
+          final dynamic titleRaw =
+              ModalRoute.of(context)!.settings.arguments;
+          if (titleRaw == null || titleRaw is! String) {
+            return const MateriDetailScreen(
+              title: 'Materi tidak ditemukan',
+            );
+          }
+          return MateriDetailScreen(title: titleRaw);
+        },
+
+        // ===== KIRIM TUGAS =====
         '/kirim_tugas': (context) {
-          final dynamic argsRaw = ModalRoute.of(context)!.settings.arguments;
+          final dynamic argsRaw =
+              ModalRoute.of(context)!.settings.arguments;
           if (argsRaw == null || argsRaw is! Map<String, String>) {
-            return const KirimTugasScreen(mapel: 'Error', judul: 'Halaman tidak valid');
+            return const KirimTugasScreen(
+              mapel: 'Error',
+              judul: 'Halaman tidak valid',
+            );
           }
           return KirimTugasScreen(
             mapel: argsRaw['mapel'] ?? 'Error',
             judul: argsRaw['judul'] ?? 'Error',
           );
-        },
-
-        // --- Rute Dynamic (Detail Materi) ---
-        '/materi_detail': (context) {
-          final dynamic titleRaw = ModalRoute.of(context)!.settings.arguments;
-          if (titleRaw == null || titleRaw is! String) {
-            return const MateriDetailScreen(title: 'Materi tidak ditemukan');
-          }
-          return MateriDetailScreen(title: titleRaw);
         },
       },
     );

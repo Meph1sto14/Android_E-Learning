@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../model/materi_item_model.dart';
+import '../../materi/model/materi_item_model.dart';
 import '../model/progress_pelajaran_model.dart';
 import '../model/jadwal_item_model.dart';
 
